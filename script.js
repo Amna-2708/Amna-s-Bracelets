@@ -1,4 +1,4 @@
-// Bracelet products
+// Bracelet products - Pakistani Store
 const products = [
     {
         id: 1,
@@ -13,8 +13,8 @@ const products = [
     {
         id: 2,
         name: 'Golden Elegance',
-        price: 34.99,
-        currency: '$',
+        price: 350,
+        currency: 'PKR',
         emoji: '✨',
         description: 'Luxurious golden chain bracelet',
         rating: '⭐⭐⭐⭐⭐'
@@ -22,8 +22,8 @@ const products = [
     {
         id: 3,
         name: 'Pearl Essence',
-        price: 39.99,
-        currency: '$',
+        price: 400,
+        currency: 'PKR',
         emoji: '🌸',
         description: 'Classic pearl bracelet for every occasion',
         rating: '⭐⭐⭐⭐'
@@ -31,8 +31,8 @@ const products = [
     {
         id: 4,
         name: 'Bohemian Vibe',
-        price: 24.99,
-        currency: '$',
+        price: 300,
+        currency: 'PKR',
         emoji: '🎨',
         description: 'Colorful beaded bohemian style bracelet',
         rating: '⭐⭐⭐⭐⭐'
@@ -40,8 +40,8 @@ const products = [
     {
         id: 5,
         name: 'Minimalist Gold',
-        price: 27.99,
-        currency: '$',
+        price: 320,
+        currency: 'PKR',
         emoji: '👑',
         description: 'Simple and elegant minimalist design',
         rating: '⭐⭐⭐⭐'
@@ -49,8 +49,8 @@ const products = [
     {
         id: 6,
         name: 'Rainbow Sparkle',
-        price: 31.99,
-        currency: '$',
+        price: 380,
+        currency: 'PKR',
         emoji: '🌈',
         description: 'Multicolor gemstone bracelet',
         rating: '⭐⭐⭐⭐⭐'
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function formatPrice(product) {
-    return `${product.currency}${product.price.toFixed(2)}`;
+    return `${product.currency} ${product.price}`;
 }
 
 function displayProducts() {
@@ -132,7 +132,7 @@ function updateCart() {
 
     if (cart.length === 0) {
         cartItemsDiv.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
-        cartTotal.textContent = '0.00';
+        cartTotal.textContent = 'PKR 0';
         return;
     }
 
@@ -152,8 +152,7 @@ function updateCart() {
     `).join('');
 
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const currencies = [...new Set(cart.map(item => item.currency))];
-    cartTotal.textContent = currencies.length === 1 ? `${currencies[0]}${total.toFixed(2)}` : `${total.toFixed(2)} (mixed currencies)`;
+    cartTotal.textContent = `PKR ${total}`;
 }
 
 function toggleCart() {
@@ -166,7 +165,8 @@ function checkout() {
         return;
     }
 
-    alert('Thank you for your order! We will contact you soon with shipping details.');
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    alert(`Thank you for your order! Total: PKR ${total}\n\nWe will contact you soon with shipping details.`);
     cart = [];
     updateCart();
     saveCartToLocalStorage();
