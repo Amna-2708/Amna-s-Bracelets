@@ -12,6 +12,16 @@ const products = [
     },
     {
         id: 2,
+        name: 'Cute Flower Crystal Bracelet',
+        price: 250,
+        currency: 'PKR',
+        emoji: '🌸',
+        description: 'A beautiful handmade flower-style crystal bracelet.',
+        rating: '⭐⭐⭐⭐⭐',
+        color: 'Pink & White'
+    },
+    {
+        id: 3,
         name: 'Golden Elegance',
         price: 350,
         currency: 'PKR',
@@ -20,7 +30,7 @@ const products = [
         rating: '⭐⭐⭐⭐⭐'
     },
     {
-        id: 3,
+        id: 4,
         name: 'Pearl Essence',
         price: 400,
         currency: 'PKR',
@@ -29,7 +39,7 @@ const products = [
         rating: '⭐⭐⭐⭐'
     },
     {
-        id: 4,
+        id: 5,
         name: 'Bohemian Vibe',
         price: 300,
         currency: 'PKR',
@@ -38,7 +48,7 @@ const products = [
         rating: '⭐⭐⭐⭐⭐'
     },
     {
-        id: 5,
+        id: 6,
         name: 'Minimalist Gold',
         price: 320,
         currency: 'PKR',
@@ -47,7 +57,7 @@ const products = [
         rating: '⭐⭐⭐⭐'
     },
     {
-        id: 6,
+        id: 7,
         name: 'Rainbow Sparkle',
         price: 380,
         currency: 'PKR',
