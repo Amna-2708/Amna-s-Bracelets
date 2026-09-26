@@ -8,7 +8,13 @@ const products = [
         emoji: '💎',
         description: 'A cute handmade crystal bracelet in blue and red colors.',
         rating: '⭐⭐⭐⭐⭐',
-        color: 'Blue & Red'
+        color: 'Blue & Red',
+        images: [
+            'https://i.imgur.com/OJqL8Z7.jpg',
+            'https://i.imgur.com/OJqL8Z7.jpg',
+            'https://i.imgur.com/OJqL8Z7.jpg',
+            'https://i.imgur.com/OJqL8Z7.jpg'
+        ]
     },
     {
         id: 2,
@@ -16,62 +22,25 @@ const products = [
         price: 250,
         currency: 'PKR',
         emoji: '🌸',
-        description: 'A beautiful handmade flower-style crystal bracelet.',
+        description: 'A beautiful handmade flower-style crystal bracelet with pink and white beads.',
         rating: '⭐⭐⭐⭐⭐',
-        color: 'Pink & White'
-    },
-    {
-        id: 3,
-        name: 'Golden Elegance',
-        price: 350,
-        currency: 'PKR',
-        emoji: '✨',
-        description: 'Luxurious golden chain bracelet',
-        rating: '⭐⭐⭐⭐⭐'
-    },
-    {
-        id: 4,
-        name: 'Pearl Essence',
-        price: 400,
-        currency: 'PKR',
-        emoji: '🌸',
-        description: 'Classic pearl bracelet for every occasion',
-        rating: '⭐⭐⭐⭐'
-    },
-    {
-        id: 5,
-        name: 'Bohemian Vibe',
-        price: 300,
-        currency: 'PKR',
-        emoji: '🎨',
-        description: 'Colorful beaded bohemian style bracelet',
-        rating: '⭐⭐⭐⭐⭐'
-    },
-    {
-        id: 6,
-        name: 'Minimalist Gold',
-        price: 320,
-        currency: 'PKR',
-        emoji: '👑',
-        description: 'Simple and elegant minimalist design',
-        rating: '⭐⭐⭐⭐'
-    },
-    {
-        id: 7,
-        name: 'Rainbow Sparkle',
-        price: 380,
-        currency: 'PKR',
-        emoji: '🌈',
-        description: 'Multicolor gemstone bracelet',
-        rating: '⭐⭐⭐⭐⭐'
+        color: 'Pink & White',
+        images: [
+            'https://i.imgur.com/kL9m5pF.jpg',
+            'https://i.imgur.com/kL9m5pF.jpg',
+            'https://i.imgur.com/kL9m5pF.jpg'
+        ]
     }
 ];
 
 let cart = [];
+let favorites = [];
+let currentImageIndex = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     displayProducts();
     loadCartFromLocalStorage();
+    loadFavoritesFromLocalStorage();
 });
 
 function formatPrice(product) {
@@ -83,21 +52,86 @@ function displayProducts() {
     productGrid.innerHTML = '';
 
     products.forEach(product => {
+        currentImageIndex[product.id] = 0;
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
+        
+        const hasImages = product.images && product.images.length > 0;
+        const isFavorite = favorites.includes(product.id);
+        
+        let imageHTML = '';
+        if (hasImages) {
+            imageHTML = `
+                <div class="product-image-gallery">
+                    <img id="product-img-${product.id}" src="${product.images[0]}" alt="${product.name}" class="product-image-img">
+                    <div class="gallery-controls">
+                        <button class="nav-btn prev-btn" onclick="previousImage(${product.id})">❮</button>
+                        <span class="image-counter"><span id="current-${product.id}">1</span>/<span id="total-${product.id}">${product.images.length}</span></span>
+                        <button class="nav-btn next-btn" onclick="nextImage(${product.id})">❯</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            imageHTML = `<div class="product-image">${product.emoji}</div>`;
+        }
+        
         productCard.innerHTML = `
-            <div class="product-image">${product.emoji}</div>
+            ${imageHTML}
             <div class="product-info">
                 <h3>${product.name}</h3>
                 <p>${product.description}</p>
                 ${product.color ? `<p><strong>Color:</strong> ${product.color}</p>` : ''}
                 <div class="product-rating">${product.rating}</div>
                 <div class="product-price">${formatPrice(product)}</div>
-                <button class="add-to-cart-btn" onclick="addToCart(${product.id})">🛒 Add to Cart</button>
+                <div class="product-actions">
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.id})">🛒 Add to Cart</button>
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${product.id})" title="Add to Favorites">
+                        ${isFavorite ? '❤️' : '🤍'}
+                    </button>
+                </div>
             </div>
         `;
         productGrid.appendChild(productCard);
     });
+}
+
+// Image gallery navigation
+function nextImage(productId) {
+    const product = products.find(p => p.id === productId);
+    if (product.images.length > 0) {
+        currentImageIndex[productId] = (currentImageIndex[productId] + 1) % product.images.length;
+        updateProductImage(productId);
+    }
+}
+
+function previousImage(productId) {
+    const product = products.find(p => p.id === productId);
+    if (product.images.length > 0) {
+        currentImageIndex[productId] = (currentImageIndex[productId] - 1 + product.images.length) % product.images.length;
+        updateProductImage(productId);
+    }
+}
+
+function updateProductImage(productId) {
+    const product = products.find(p => p.id === productId);
+    const img = document.getElementById(`product-img-${productId}`);
+    const counter = document.getElementById(`current-${productId}`);
+    if (img) {
+        img.src = product.images[currentImageIndex[productId]];
+        counter.textContent = currentImageIndex[productId] + 1;
+    }
+}
+
+// Favorite functionality
+function toggleFavorite(productId) {
+    if (favorites.includes(productId)) {
+        favorites = favorites.filter(id => id !== productId);
+    } else {
+        favorites.push(productId);
+    }
+    saveFavoritesToLocalStorage();
+    displayProducts();
+    showNotification(favorites.includes(productId) ? 'Added to favorites!' : 'Removed from favorites!');
 }
 
 function addToCart(productId) {
@@ -192,6 +226,17 @@ function loadCartFromLocalStorage() {
     if (savedCart) {
         cart = JSON.parse(savedCart);
         updateCart();
+    }
+}
+
+function saveFavoritesToLocalStorage() {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+function loadFavoritesFromLocalStorage() {
+    const savedFavorites = localStorage.getItem('favorites');
+    if (savedFavorites) {
+        favorites = JSON.parse(savedFavorites);
     }
 }
 
